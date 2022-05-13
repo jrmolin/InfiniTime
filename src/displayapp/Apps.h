@@ -27,6 +27,7 @@ namespace Pinetime {
       Steps,
       Weather,
       PassKey,
+      CircleTime,
       QuickSettings,
       Settings,
       SettingWatchFace,

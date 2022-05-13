@@ -12,6 +12,7 @@
 #include "components/motor/MotorController.h"
 #include "displayapp/screens/ApplicationList.h"
 #include "displayapp/screens/Brightness.h"
+#include "displayapp/screens/CircleTime.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/FirmwareUpdate.h"
 #include "displayapp/screens/FirmwareValidation.h"
@@ -460,6 +461,13 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
     case Apps::Steps:
       currentScreen = std::make_unique<Screens::Steps>(this, motionController, settingsController);
       break;
+    case Apps::CircleTime:
+      currentScreen = std::make_unique<Screens::CircleTime>(this, motorController);
+      break;
+    case Apps::Weather:
+        // do nothing here; just suppress a warning
+      break;
+
   }
   currentApp = app;
 }
