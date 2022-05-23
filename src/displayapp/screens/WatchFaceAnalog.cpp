@@ -6,6 +6,7 @@
 #include "displayapp/screens/Symbols.h"
 #include "displayapp/screens/NotificationIcon.h"
 #include "components/settings/Settings.h"
+#include "components/motion/MotionController.h"
 
 LV_IMG_DECLARE(bg_clock);
 
@@ -49,14 +50,16 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp* app,
                                  Controllers::Battery& batteryController,
                                  Controllers::Ble& bleController,
                                  Controllers::NotificationManager& notificationManager,
-                                 Controllers::Settings& settingsController)
+                                 Controllers::Settings& settingsController,
+                                 Controllers::MotionController& motionController)
   : Screen(app),
     currentDateTime {{}},
     dateTimeController {dateTimeController},
     batteryController {batteryController},
     bleController {bleController},
     notificationManager {notificationManager},
-    settingsController {settingsController} {
+    settingsController {settingsController},
+    motionController {motionController} {
 
   sHour = 99;
   sMinute = 99;
@@ -122,6 +125,17 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp* app,
   lv_style_set_line_color(&hour_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_WHITE);
   lv_style_set_line_rounded(&hour_line_style_trace, LV_STATE_DEFAULT, false);
   lv_obj_add_style(hour_body_trace, LV_LINE_PART_MAIN, &hour_line_style_trace);
+
+  // Step Count
+  stepValue = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(stepValue, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00FFE7));
+  lv_label_set_text_static(stepValue, "0");
+  lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
+
+  stepIcon = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(stepIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00FFE7));
+  lv_label_set_text_static(stepIcon, Symbols::shoe);
+  lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_TOP_RIGHT, 0, 0);
 
   taskRefresh = lv_task_create(RefreshTaskCallback, LV_DISP_DEF_REFR_PERIOD, LV_TASK_PRIO_MID, this);
 
@@ -228,5 +242,12 @@ void WatchFaceAnalog::Refresh() {
       currentDayOfWeek = dayOfWeek;
       currentDay = day;
     }
+  }
+
+  stepCount = motionController.NbSteps();
+  motionSensorOk = motionController.IsSensorOk();
+  if (stepCount.IsUpdated() || motionSensorOk.IsUpdated()) {
+    lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
+    lv_obj_realign(stepValue);
   }
 }

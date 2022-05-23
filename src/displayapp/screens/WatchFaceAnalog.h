@@ -7,6 +7,7 @@
 #include "displayapp/screens/Screen.h"
 #include "components/datetime/DateTimeController.h"
 #include "components/battery/BatteryController.h"
+#include "components/motion/MotionController.h"
 #include "components/ble/BleController.h"
 #include "components/ble/NotificationManager.h"
 #include <displayapp/screens/BatteryIcon.h>
@@ -28,7 +29,8 @@ namespace Pinetime {
                         Controllers::Battery& batteryController,
                         Controllers::Ble& bleController,
                         Controllers::NotificationManager& notificationManager,
-                        Controllers::Settings& settingsController);
+                        Controllers::Settings& settingsController,
+                        Controllers::MotionController& motionController);
 
         ~WatchFaceAnalog() override;
 
@@ -45,6 +47,8 @@ namespace Pinetime {
         DirtyValue<bool> isCharging {};
         DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
         DirtyValue<bool> notificationState {false};
+        DirtyValue<bool> motionSensorOk {};
+        DirtyValue<uint32_t> stepCount {};
 
         lv_obj_t* hour_body;
         lv_obj_t* hour_body_trace;
@@ -68,6 +72,8 @@ namespace Pinetime {
         lv_obj_t* plugIcon;
         lv_obj_t* notificationIcon;
 
+        lv_obj_t* stepIcon;
+        lv_obj_t* stepValue;
         BatteryIcon batteryIcon;
 
         const Controllers::DateTime& dateTimeController;
@@ -75,6 +81,7 @@ namespace Pinetime {
         Controllers::Ble& bleController;
         Controllers::NotificationManager& notificationManager;
         Controllers::Settings& settingsController;
+        Controllers::MotionController& motionController;
 
         void UpdateClock();
         void SetBatteryIcon();
