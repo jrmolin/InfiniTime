@@ -22,9 +22,11 @@ RUN apt-get update -qq \
       python3-dev \
       git \
       apt-utils \
-    && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+    && curl -sL -o setup-18.sh https://deb.nodesource.com/setup_18.x \
+    && bash setup-18.sh \
+    && rm setup-18.sh \
     && apt-get install -y nodejs \
-    && rm -rf /var/cache/apt/* /var/lib/apt/lists/*;
+    && rm -rf /var/cache/apt/* /var/lib/apt/lists/*
 
 # Git needed for PROJECT_GIT_COMMIT_HASH variable setting
 
