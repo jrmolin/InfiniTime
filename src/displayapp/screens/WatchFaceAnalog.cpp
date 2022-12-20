@@ -7,41 +7,40 @@
 #include "displayapp/screens/NotificationIcon.h"
 #include "components/settings/Settings.h"
 #include "components/motion/MotionController.h"
+#include "displayapp/InfiniTimeTheme.h"
 
 LV_IMG_DECLARE(bg_clock);
 
 using namespace Pinetime::Applications::Screens;
 
 namespace {
-constexpr int16_t HourLength = 70;
-constexpr int16_t MinuteLength = 90;
-constexpr int16_t SecondLength = 110;
+  constexpr int16_t HourLength = 70;
+  constexpr int16_t MinuteLength = 90;
+  constexpr int16_t SecondLength = 110;
 
-// sin(90) = 1 so the value of _lv_trigo_sin(90) is the scaling factor
-const auto LV_TRIG_SCALE = _lv_trigo_sin(90);
+  // sin(90) = 1 so the value of _lv_trigo_sin(90) is the scaling factor
+  const auto LV_TRIG_SCALE = _lv_trigo_sin(90);
 
-int16_t Cosine(int16_t angle) {
-  return _lv_trigo_sin(angle + 90);
-}
+  int16_t Cosine(int16_t angle) {
+    return _lv_trigo_sin(angle + 90);
+  }
 
-int16_t Sine(int16_t angle) {
-  return _lv_trigo_sin(angle);
-}
+  int16_t Sine(int16_t angle) {
+    return _lv_trigo_sin(angle);
+  }
 
-int16_t CoordinateXRelocate(int16_t x) {
-  return (x + LV_HOR_RES / 2);
-}
+  int16_t CoordinateXRelocate(int16_t x) {
+    return (x + LV_HOR_RES / 2);
+  }
 
-int16_t CoordinateYRelocate(int16_t y) {
-  return std::abs(y - LV_HOR_RES / 2);
-}
+  int16_t CoordinateYRelocate(int16_t y) {
+    return std::abs(y - LV_HOR_RES / 2);
+  }
 
-lv_point_t CoordinateRelocate(int16_t radius, int16_t angle) {
-  return lv_point_t{
-    .x = CoordinateXRelocate(radius * static_cast<int32_t>(Sine(angle)) / LV_TRIG_SCALE),
-    .y = CoordinateYRelocate(radius * static_cast<int32_t>(Cosine(angle)) / LV_TRIG_SCALE)
-  };
-}
+  lv_point_t CoordinateRelocate(int16_t radius, int16_t angle) {
+    return lv_point_t {.x = CoordinateXRelocate(radius * static_cast<int32_t>(Sine(angle)) / LV_TRIG_SCALE),
+                       .y = CoordinateYRelocate(radius * static_cast<int32_t>(Cosine(angle)) / LV_TRIG_SCALE)};
+  }
 
 }
 
@@ -65,36 +64,35 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp* app,
   sMinute = 99;
   sSecond = 99;
 
-  lv_obj_t* bg_clock_img = lv_img_create(lv_scr_act(), NULL);
+  lv_obj_t* bg_clock_img = lv_img_create(lv_scr_act(), nullptr);
   lv_img_set_src(bg_clock_img, &bg_clock);
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(bg_clock_img, nullptr, LV_ALIGN_CENTER, 0, 0);
 
   batteryIcon.Create(lv_scr_act());
   lv_obj_align(batteryIcon.GetObject(), nullptr, LV_ALIGN_IN_TOP_RIGHT, 0, 0);
 
   plugIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text_static(plugIcon, Symbols::plug);
-  lv_obj_set_style_local_text_color(plugIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_RED);
   lv_obj_align(plugIcon, nullptr, LV_ALIGN_IN_TOP_RIGHT, 0, 0);
 
-  notificationIcon = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_set_style_local_text_color(notificationIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
+  notificationIcon = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(notificationIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_LIME);
   lv_label_set_text_static(notificationIcon, NotificationIcon::GetIcon(false));
-  lv_obj_align(notificationIcon, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+  lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 
   // Date - Day / Week day
 
-  label_date_day = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_set_style_local_text_color(label_date_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_MAKE(0xff, 0xb0, 0x0));
+  label_date_day = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(label_date_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, Colors::orange);
   lv_label_set_text_fmt(label_date_day, "%s\n%02i", dateTimeController.DayOfWeekShortToString(), dateTimeController.Day());
   lv_label_set_align(label_date_day, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(label_date_day, NULL, LV_ALIGN_CENTER, 50, 0);
+  lv_obj_align(label_date_day, nullptr, LV_ALIGN_CENTER, 50, 0);
 
-  minute_body = lv_line_create(lv_scr_act(), NULL);
-  minute_body_trace = lv_line_create(lv_scr_act(), NULL);
-  hour_body = lv_line_create(lv_scr_act(), NULL);
-  hour_body_trace = lv_line_create(lv_scr_act(), NULL);
-  second_body = lv_line_create(lv_scr_act(), NULL);
+  minute_body = lv_line_create(lv_scr_act(), nullptr);
+  minute_body_trace = lv_line_create(lv_scr_act(), nullptr);
+  hour_body = lv_line_create(lv_scr_act(), nullptr);
+  hour_body_trace = lv_line_create(lv_scr_act(), nullptr);
+  second_body = lv_line_create(lv_scr_act(), nullptr);
 
   lv_style_init(&second_line_style);
   lv_style_set_line_width(&second_line_style, LV_STATE_DEFAULT, 3);
