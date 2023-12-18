@@ -1,12 +1,12 @@
 #pragma once
 
-#include <lvgl/src/lv_core/lv_obj.h>
 #include <chrono>
 #include <cstdint>
 #include <memory>
-#include <components/heartrate/HeartRateController.h>
+#include "displayapp/Controllers.h"
 #include "displayapp/screens/Screen.h"
-#include "components/datetime/DateTimeController.h"
+#include "displayapp/Apps.h"
+#include "Symbols.h"
 
 namespace Pinetime {
   namespace Controllers {
@@ -15,20 +15,24 @@ namespace Pinetime {
     class Ble;
     class NotificationManager;
     class MotionController;
+    class DateTime;
+    class HeartRateController;
+    class WeatherService;
+    class FS;
   }
 
   namespace Applications {
     namespace Screens {
       class Clock : public Screen {
       public:
-        Clock(DisplayApp* app,
-              Controllers::DateTime& dateTimeController,
-              Controllers::Battery& batteryController,
-              Controllers::Ble& bleController,
+        Clock(Controllers::DateTime& dateTimeController,
+              const Controllers::Battery& batteryController,
+              const Controllers::Ble& bleController,
               Controllers::NotificationManager& notificationManager,
               Controllers::Settings& settingsController,
               Controllers::HeartRateController& heartRateController,
               Controllers::MotionController& motionController,
+              Controllers::WeatherService& weatherService,
               Controllers::FS& filesystem);
         ~Clock() override;
 
@@ -37,12 +41,13 @@ namespace Pinetime {
 
       private:
         Controllers::DateTime& dateTimeController;
-        Controllers::Battery& batteryController;
-        Controllers::Ble& bleController;
+        const Controllers::Battery& batteryController;
+        const Controllers::Ble& bleController;
         Controllers::NotificationManager& notificationManager;
         Controllers::Settings& settingsController;
         Controllers::HeartRateController& heartRateController;
         Controllers::MotionController& motionController;
+        Controllers::WeatherService& weatherService;
         Controllers::FS& filesystem;
 
         std::unique_ptr<Screen> screen;

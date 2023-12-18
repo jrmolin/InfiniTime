@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 
 namespace Pinetime {
   namespace Applications {
@@ -25,7 +26,6 @@ namespace Pinetime {
       Metronome,
       Motion,
       Steps,
-      Weather,
       PassKey,
       QuickSettings,
       Settings,
@@ -34,12 +34,37 @@ namespace Pinetime {
       SettingDisplay,
       SettingWakeUp,
       SettingSteps,
-      SettingSetDate,
-      SettingSetTime,
+      SettingSetDateTime,
       SettingChimes,
       SettingShakeThreshold,
       SettingBluetooth,
-      Error
+      Error,
+      Weather
     };
+
+    template <Apps>
+    struct AppTraits {};
+
+    template <Apps... As>
+    struct TypeList {
+      static constexpr size_t Count = sizeof...(As);
+    };
+
+    using UserAppTypes = TypeList<Apps::StopWatch,
+                                  Apps::Alarm,
+                                  Apps::Timer,
+                                  Apps::Steps,
+                                  Apps::HeartRate,
+                                  Apps::Music,
+                                  Apps::Paint,
+                                  Apps::Paddle,
+                                  Apps::Twos,
+                                  Apps::Metronome,
+                                  Apps::Navigation
+                                  /*
+                                  Apps::Weather,
+                                  Apps::Motion
+                                  */
+                                  >;
   }
 }
