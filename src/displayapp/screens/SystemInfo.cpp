@@ -234,7 +234,7 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen4() {
   lv_table_set_col_width(infoTask, 3, 90);
 
   auto nb = uxTaskGetSystemState(tasksStatus, maxTaskCount, nullptr);
-  std::sort(tasksStatus, tasksStatus + nb, sortById);
+  std::sort(tasksStatus, tasksStatus + std::min(nb, (long unsigned int)maxTaskCount), sortById);
   for (uint8_t i = 0; i < nb && i < maxTaskCount; i++) {
     char buffer[11] = {0};
 

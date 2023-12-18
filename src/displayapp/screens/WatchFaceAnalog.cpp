@@ -48,8 +48,7 @@ WatchFaceAnalog::WatchFaceAnalog(Controllers::DateTime& dateTimeController,
                                  Controllers::NotificationManager& notificationManager,
                                  Controllers::Settings& settingsController,
                                  Controllers::MotionController& motionController)
-  : Screen(app),
-    currentDateTime {{}},
+  : currentDateTime {{}},
     batteryIcon(true),
     dateTimeController {dateTimeController},
     batteryController {batteryController},
@@ -278,8 +277,7 @@ void WatchFaceAnalog::Refresh() {
   }
 
   stepCount = motionController.NbSteps();
-  motionSensorOk = motionController.IsSensorOk();
-  if (stepCount.IsUpdated() || motionSensorOk.IsUpdated()) {
+  if (stepCount.IsUpdated()) {
     lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
     lv_obj_realign(stepValue);
   }
